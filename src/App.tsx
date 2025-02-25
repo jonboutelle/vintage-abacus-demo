@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import Abacus from './components/Abacus';
 
 const App: React.FC = () => {
+  // Mock population value for testing
+  const [population, setPopulation] = useState<number>(7900000000);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Simulate population increase for testing
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPopulation(prev => prev + Math.floor(Math.random() * 10));
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-center text-gray-800">Vintage Abacus World Population Counter</h1>
       </header>
       <main className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6">
-        {/* Abacus component will go here */}
-        <div className="h-64 bg-amber-100 rounded-md border-2 border-amber-700 flex items-center justify-center mb-6">
-          <p className="text-gray-600">Abacus component will be displayed here</p>
+        {/* Abacus component */}
+        <div className="mb-6">
+          <Abacus value={population} isLoading={isLoading} />
         </div>
         
         <div className="flex justify-between items-center">
