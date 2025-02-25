@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import Abacus from './components/Abacus';
 import StatusLED from './components/StatusLED';
 import DataToggle from './components/DataToggle';
+import WorldometerTest from './components/WorldometerTest';
 import { useAppContext } from './context/AppContext';
 
 const App: React.FC = () => {
@@ -17,6 +18,9 @@ const App: React.FC = () => {
     increasePerSecond,
     setActiveDataType
   } = useAppContext();
+
+  // State to toggle the Worldometer test component
+  const [showWorldometerTest, setShowWorldometerTest] = useState(false);
 
   // Function to handle LED click - will be used for showing error details later
   const handleLedClick = () => {
@@ -91,6 +95,23 @@ const App: React.FC = () => {
             onChange={setActiveDataType} 
           />
         </div>
+        
+        {/* Worldometer Test toggle button */}
+        <div className="mt-8 text-center">
+          <button 
+            onClick={() => setShowWorldometerTest(prev => !prev)}
+            className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 text-sm rounded border border-amber-300 transition-colors"
+          >
+            {showWorldometerTest ? 'Hide Worldometer Data' : 'Show Worldometer Data'}
+          </button>
+        </div>
+        
+        {/* Worldometer Test component */}
+        {showWorldometerTest && (
+          <div className="mt-6">
+            <WorldometerTest />
+          </div>
+        )}
       </main>
       
       <footer className="mt-8 text-center text-amber-700 text-sm">
