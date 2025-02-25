@@ -70,7 +70,7 @@ This plan outlines the step-by-step implementation for building a React demo app
     *   Create `/src/components/DataToggle.tsx` with a toggle button that allows switching between displaying the world population and national debt.
     *   **Reference:** PRD Section 2 & Core Features: Data Toggle Feature
 
-5.  **Step 11: Set Up Global State Management with React Context**
+5.  **Step 11: Set Up Global State Management with React Context** ✅ DONE
 
     *   Set up a Context Provider in `/src/context/AppContextProvider.tsx` to manage global states such as:
 

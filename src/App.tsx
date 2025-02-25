@@ -1,64 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import Abacus from './components/Abacus';
-import StatusLED, { LEDStatus } from './components/StatusLED';
-import DataToggle, { DataType } from './components/DataToggle';
+import StatusLED from './components/StatusLED';
+import DataToggle from './components/DataToggle';
+import { useAppContext } from './context/AppContext';
 
 const App: React.FC = () => {
-  // Mock population value for testing
-  const [population, setPopulation] = useState<number>(7900000000);
-  // Mock debt value for testing
-  const [debt, setDebt] = useState<number>(34000000000000);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  // Add state for LED status and error count
-  const [ledStatus, setLedStatus] = useState<LEDStatus>('neutral');
-  const [errorCount, setErrorCount] = useState<number>(0);
-  // Add state for active data type
-  const [activeData, setActiveData] = useState<DataType>('population');
-
-  // Simulate population increase for testing
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPopulation(prev => prev + Math.floor(Math.random() * 10));
-      setDebt(prev => prev + Math.floor(Math.random() * 100000));
-    }, 1000);
-    
-    return () => clearInterval(interval);
-  }, []);
+  const {
+    population,
+    debt,
+    activeDataType,
+    isLoading,
+    ledStatus,
+    errorCount,
+    errorMessages,
+    setActiveDataType
+  } = useAppContext();
 
   // Function to handle LED click - will be used for showing error details later
   const handleLedClick = () => {
     console.log('LED clicked, error count:', errorCount);
+    console.log('Error messages:', errorMessages);
     // This will be expanded later to show error details in a modal
-  };
-
-  // For testing: Toggle LED status when clicking the footer
-  const cycleLedStatus = () => {
-    setErrorCount(prev => {
-      const newCount = prev + 1;
-      
-      // Update LED status based on error count
-      if (newCount >= 3) {
-        setLedStatus('error');
-      } else if (newCount >= 1) {
-        setLedStatus('warning');
-      } else {
-        setLedStatus('neutral');
-      }
-      
-      return newCount;
-    });
-  };
-
-  // Handle data type change
-  const handleDataTypeChange = (dataType: DataType) => {
-    setActiveData(dataType);
-    console.log('Data type changed to:', dataType);
   };
 
   // Get current value based on active data type
   const getCurrentValue = () => {
-    return activeData === 'population' ? population : debt;
+    return activeDataType === 'population' ? population : debt;
   };
 
   return (
@@ -66,7 +34,7 @@ const App: React.FC = () => {
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-center text-gray-800">Vintage Abacus Counter</h1>
         <p className="text-center text-gray-600 mt-2">
-          {activeData === 'population' ? 'World Population' : 'U.S. National Debt'}
+          {activeDataType === 'population' ? 'World Population' : 'U.S. National Debt'}
         </p>
       </header>
       <main className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6">
@@ -88,16 +56,15 @@ const App: React.FC = () => {
           
           {/* DataToggle component */}
           <DataToggle 
-            activeData={activeData} 
-            onChange={handleDataTypeChange} 
+            activeData={activeDataType} 
+            onChange={setActiveDataType} 
           />
         </div>
       </main>
       <footer 
         className="mt-8 text-center text-gray-600 text-sm cursor-pointer hover:text-gray-800"
-        onClick={cycleLedStatus}
       >
-        <p>Vintage Abacus Demo App - {new Date().getFullYear()} (Click to test LED)</p>
+        <p>Vintage Abacus Demo App - {new Date().getFullYear()}</p>
       </footer>
     </div>
   );
