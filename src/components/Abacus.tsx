@@ -20,6 +20,14 @@ const Abacus: React.FC<AbacusProps> = ({ value = 0, isLoading = false }) => {
   // Number of beads per row
   const beadsPerRow = 10;
   
+  // Bead size and spacing
+  const beadSize = 24; // in pixels
+  const beadGap = 4; // in pixels
+  const beadSpacing = beadSize + beadGap;
+  
+  // Calculate the total width needed for all beads
+  const totalBeadWidth = beadsPerRow * beadSpacing;
+  
   return (
     <div className="relative w-full">
       {/* Abacus frame */}
@@ -27,7 +35,7 @@ const Abacus: React.FC<AbacusProps> = ({ value = 0, isLoading = false }) => {
         {/* Abacus title */}
         <div className="text-center mb-4">
           <h2 className="text-xl font-bold text-amber-100">
-            {isLoading ? 'Loading...' : 'World Population'}
+            {isLoading ? 'Loading...' : (value > 1000000000 ? 'World Population' : 'U.S. National Debt')}
           </h2>
           <p className="text-amber-200 text-sm">Current count: {value.toLocaleString()}</p>
         </div>
@@ -35,7 +43,7 @@ const Abacus: React.FC<AbacusProps> = ({ value = 0, isLoading = false }) => {
         {/* Abacus body */}
         <div className="bg-amber-700 p-4 rounded-md shadow-inner">
           {/* Abacus rods */}
-          <div className="flex flex-col space-y-3">
+          <div className="flex flex-col space-y-4">
             {Array.from({ length: rows }).map((_, rowIndex) => (
               <div key={rowIndex} className="flex items-center">
                 {/* Row label (power of 10) */}
@@ -44,33 +52,74 @@ const Abacus: React.FC<AbacusProps> = ({ value = 0, isLoading = false }) => {
                 </div>
                 
                 {/* Rod with beads */}
-                <div className="flex-1 h-8 bg-amber-900 rounded-full flex items-center px-1 relative">
-                  {/* Beads */}
-                  {Array.from({ length: beadsPerRow }).map((_, beadIndex) => {
-                    const isActive = beadIndex < digits[rowIndex];
-                    return (
-                      <motion.div
-                        key={beadIndex}
-                        className={`h-6 w-6 rounded-full mx-0.5 shadow-md ${
-                          isActive ? 'bg-amber-500' : 'bg-amber-300'
-                        }`}
-                        initial={{ x: 0 }}
-                        animate={{ 
-                          x: isActive ? beadIndex * 8 : 0,
-                          backgroundColor: isActive ? '#f59e0b' : '#fcd34d'
-                        }}
-                        transition={{ 
-                          type: 'spring', 
-                          stiffness: 100, 
-                          damping: 15,
-                          delay: rowIndex * 0.05
-                        }}
-                      />
-                    );
-                  })}
-                  
+                <div className="flex-1 h-10 bg-amber-900 rounded-full relative overflow-hidden">
                   {/* Rod divider */}
-                  <div className="absolute right-1/2 h-full w-0.5 bg-amber-950"></div>
+                  <div className="absolute left-1/2 h-full w-0.5 bg-amber-950 z-20"></div>
+                  
+                  {/* Inactive beads area (right side) */}
+                  <div className="absolute right-0 top-0 bottom-0 w-1/2 flex items-center justify-start pl-2">
+                    {Array.from({ length: beadsPerRow }).map((_, beadIndex) => {
+                      const digit = digits[rowIndex];
+                      const isActive = beadIndex < digit;
+                      
+                      // Only render inactive beads on the right side
+                      if (isActive) return null;
+                      
+                      return (
+                        <motion.div
+                          key={`inactive-${beadIndex}`}
+                          className="rounded-full shadow-md bg-amber-300 absolute"
+                          style={{
+                            width: beadSize,
+                            height: beadSize,
+                            left: beadIndex * beadSpacing
+                          }}
+                          animate={{ 
+                            backgroundColor: '#fcd34d',
+                            opacity: 0.8
+                          }}
+                          transition={{ 
+                            type: 'spring', 
+                            stiffness: 300, 
+                            damping: 25
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Active beads area (left side) */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1/2 flex items-center justify-end pr-2">
+                    {Array.from({ length: beadsPerRow }).map((_, beadIndex) => {
+                      const digit = digits[rowIndex];
+                      const isActive = beadIndex < digit;
+                      
+                      // Only render active beads on the left side
+                      if (!isActive) return null;
+                      
+                      return (
+                        <motion.div
+                          key={`active-${beadIndex}`}
+                          className="rounded-full shadow-md bg-amber-500 absolute"
+                          style={{
+                            width: beadSize,
+                            height: beadSize,
+                            right: (digit - beadIndex - 1) * beadSpacing
+                          }}
+                          animate={{ 
+                            backgroundColor: '#f59e0b',
+                            opacity: 1
+                          }}
+                          transition={{ 
+                            type: 'spring', 
+                            stiffness: 300, 
+                            damping: 25,
+                            delay: rowIndex * 0.05
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
                 
                 {/* Current digit display */}
