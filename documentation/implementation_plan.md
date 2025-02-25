@@ -60,12 +60,12 @@ This plan outlines the step-by-step implementation for building a React demo app
     *   Apply Tailwind CSS for styling to mimic old oiled wood.
     *   **Reference:** PRD Section 2 & Core Features: Abacus Visual Display
 
-3.  **Step 9: Develop LED Indicator Component**
+3.  **Step 9: Develop LED Indicator Component** ✅ DONE
 
     *   Create `/src/components/StatusLED.tsx` to display a virtual LED indicator. Initially, it will have a neutral color and will change to orange (on one error) or red (on three consecutive errors).
     *   **Reference:** PRD Section 2 & Core Features: Error Handling & Notification System
 
-4.  **Step 10: Implement Data Toggle Component**
+4.  **Step 10: Implement Data Toggle Component** ✅ DONE
 
     *   Create `/src/components/DataToggle.tsx` with a toggle button that allows switching between displaying the world population and national debt.
     *   **Reference:** PRD Section 2 & Core Features: Data Toggle Feature
