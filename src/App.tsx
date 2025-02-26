@@ -4,6 +4,7 @@ import Abacus from './components/Abacus';
 import StatusLED from './components/StatusLED';
 import DataToggle from './components/DataToggle';
 import WorldometerTest from './components/WorldometerTest';
+import DataFetcherTest from './components/DataFetcherTest';
 import { useAppContext } from './context/AppContext';
 
 const App: React.FC = () => {
@@ -21,6 +22,9 @@ const App: React.FC = () => {
 
   // State to toggle the Worldometer test component
   const [showWorldometerTest, setShowWorldometerTest] = useState(false);
+  
+  // State to toggle the DataFetcher test component
+  const [showDataFetcherTest, setShowDataFetcherTest] = useState(false);
 
   // Function to handle LED click - will be used for showing error details later
   const handleLedClick = () => {
@@ -96,13 +100,20 @@ const App: React.FC = () => {
           />
         </div>
         
-        {/* Worldometer Test toggle button */}
-        <div className="mt-8 text-center">
+        {/* Test components toggle buttons */}
+        <div className="mt-8 text-center flex flex-wrap justify-center gap-2">
           <button 
             onClick={() => setShowWorldometerTest(prev => !prev)}
             className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 text-sm rounded border border-amber-300 transition-colors"
           >
             {showWorldometerTest ? 'Hide Worldometer Data' : 'Show Worldometer Data'}
+          </button>
+          
+          <button 
+            onClick={() => setShowDataFetcherTest(prev => !prev)}
+            className="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 text-sm rounded border border-amber-300 transition-colors"
+          >
+            {showDataFetcherTest ? 'Hide DataFetcher Test' : 'Show DataFetcher Test'}
           </button>
         </div>
         
@@ -110,6 +121,13 @@ const App: React.FC = () => {
         {showWorldometerTest && (
           <div className="mt-6">
             <WorldometerTest />
+          </div>
+        )}
+        
+        {/* DataFetcher Test component */}
+        {showDataFetcherTest && (
+          <div className="mt-6">
+            <DataFetcherTest />
           </div>
         )}
       </main>
